@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    
+    steps:
+    - name: Check out github repository
+      uses: actions/checkout@v1
+    - name: Install cocoapods
+      run: gem install cocoapods
+    - name: Install pod
+      run: pod install --repo-update --project-directory=./
+    - name: Run xcode build
+      run: |
+        xcodebuild clean build test -workspace RxMVVM+Texture.xcworkspace -scheme RxMVVM+Texture -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8,OS=12.0' -configuration Debug -enableCodeCoverage YES CODE_SIGNING_REQUIRED=NO | xcpretty
